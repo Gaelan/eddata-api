@@ -30,8 +30,15 @@ const monitors = {
       { $match: { _id: { $ne: null }, count: { $gt: 1 } } },
       { $project: { nameId: "$_id", _id: 0 } }
     );
-    console.log(dupes);
-    return { status: "ok", message: "foo" };
+    if (dupes.length == 0) {
+      return { status: "ok", message: "No employees have duplicate nameIds." };
+    } else {
+      return {
+        status: "warning",
+        message: `${dupes.length} employee(s) have duplicate nameIds.`,
+        details: { duplicateNameIds: dupes.map(dupe => dupe.nameId) }
+      };
+    }
   }
 };
 
